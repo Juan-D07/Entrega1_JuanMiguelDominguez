@@ -75,13 +75,44 @@ function objectSearch(searchN){
     return "Hay "+ quantity +" " +searchN+"\n Descripcion: "+description+"\n Posiciones: "+positions;
 }
 
+function searchFreeSpace(){
+    for(let i=0; i<inventario.length;i++){
+        for(let j=0; j<inventario[i].length;j++) {
+            if (inventario[i][j]=="VACIO") return [i,j];
+        }
+    }
+    return "lleno";
+}
+
+function searchFreeSpace(nameS){
+    for(let i=0; i<inventario.length;i++){
+        for(let j=0; j<inventario[i].length;j++) {
+            if (inventario[i][j].name==nameS && inventario[i][j].maxStack!=inventario[i][j].quantity) return [i,j];
+        }
+    }
+    return "lleno";
+}
+
 function objectAddition(objN, objD, objQ){
     let availableNames=["espada","pico","piedra","manzana","antorcha"]
-    if (!availableNames.includes(objN.toLowerCase())) return "error en la entrada del nombre, volver a intentar";
-    if ((objN=="espada" && objQ!=1) || (objN=="espada" && objQ!=1)) return "error en la entrada de la cantidad, volver a intentar";
-    if ((objN=="piedra" && (objQ<0 || objQ>64)) || (objN=="antorcha" && (objQ<0 || objQ>64)) ||(objN=="manzana" && (objQ<0 || objQ>64))) return "error en la entrada de la cantidad, volver a intentar";
+    if (!availableNames.includes(objN)) return "error en la entrada del nombre, volver a intentar";
 
-    return "objeto anadido o no hay espacio";
+    if (objN=="espada" || objN=="pico"){
+        if(objQ!=1) return "error en la entrada, cantidad no es uno 1";
+        let position=searchFreeSpace();
+        if (position=="lleno") return "el inventario esta lleno";
+        new Item(objN, objD, objQ,1);
+    }
+    else{
+        if (objQ<0 || objQ>64) "error en la entrada, cantidad no esta entre 1 y 64";
+        let position=searchFreeSpace(objN);
+        while(position!="lleno"){
+            
+        }
+
+    }
+
+    return "objeto añadido o no hay espacio";
 }
 
 inventario[0][0] = new Item("espada", "espada de diamante", 1,1);
@@ -92,7 +123,7 @@ while (!fin){
                         "\n 1. Mostrar Inventario" +
                         "\n 2. Mostrar Hotbar" +
                         "\n 3. Buscar Objeto" +
-                        "\n 4. Anadir Objeto" +
+                        "\n 4. Añadir Objeto" +
                         "\n 0. Salir");
     switch (operacion)  {
         case "1":
@@ -105,9 +136,9 @@ while (!fin){
             console.log(objectSearch(prompt("nombre del item (espada, pico, piedra, manzana, antorcha)")));
             break
         case "4":
-            let name = prompt("nombre del item (espada, pico, piedra, manzana, antorcha)");
-            let desc = prompt("descripcion del item");
-            let quan = prompt("cantidad del item");
+            let name = prompt("nombre del item (espada, pico, piedra, manzana, antorcha)").toLowerCase();
+            let desc = prompt("descripción del item");
+            let quan = Number(prompt("cantidad del item"));
             console.log(objectAddition(name,desc,quan));
             break
         case "0":
