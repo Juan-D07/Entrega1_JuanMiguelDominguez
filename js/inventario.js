@@ -78,7 +78,8 @@ function objectSearch(searchN){
 function searchFreeSpace(){
     for(let i=0; i<inventario.length;i++){
         for(let j=0; j<inventario[i].length;j++) {
-            if (inventario[i][j]=="VACIO") return [i,j];
+            console.log(inventario[i][j]);
+            if (inventario[i][j]=="VACIO") return inventario[i][j];
         }
     }
     return "lleno";
@@ -87,7 +88,7 @@ function searchFreeSpace(){
 function searchFreeSpace(nameS){
     for(let i=0; i<inventario.length;i++){
         for(let j=0; j<inventario[i].length;j++) {
-            if (inventario[i][j].name==nameS && inventario[i][j].maxStack!=inventario[i][j].quantity) return [i,j];
+            if (inventario[i][j].name==nameS && inventario[i][j].maxStack>inventario[i][j].quantity) return inventario[i][j];
         }
     }
     return "lleno";
@@ -101,15 +102,25 @@ function objectAddition(objN, objD, objQ){
         if(objQ!=1) return "error en la entrada, cantidad no es uno 1";
         let position=searchFreeSpace();
         if (position=="lleno") return "el inventario esta lleno";
-        new Item(objN, objD, objQ,1);
+        position=new Item(objN, objD, objQ,1);
     }
     else{
         if (objQ<0 || objQ>64) "error en la entrada, cantidad no esta entre 1 y 64";
         let position=searchFreeSpace(objN);
         while(position!="lleno"){
-            
+            if(position.quantity+objQ>64){
+                objQ-= position.quantity;
+                position.quantity =64;
+            }
+            else if (position.quantity+objQ<64){
+                position.quantity+=objQ;
+                return "cantidad de objeto añadido";
+            }
+            position=searchFreeSpace(objN);
         }
-
+        position=searchFreeSpace();
+        if (position=="lleno") return "el inventario esta lleno, se han quedado "+objQ+" items fuera";
+        position=new Item(objN, objD, objQ,64);
     }
 
     return "objeto añadido o no hay espacio";
