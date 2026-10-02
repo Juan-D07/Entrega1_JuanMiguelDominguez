@@ -29,7 +29,7 @@ function showFullInventory(){
                 fila=fila+" VACIO ";
             }
             else{
-                fila=fila+inventario[i][j].name+" ";
+                fila=fila+inventario[i][j].name+"/"+inventario[i][j].quantity+" ";
             }
             if (j< inventario[i].length-1) fila=fila+"|";
         }
@@ -78,55 +78,61 @@ function objectSearch(searchN){
 function searchFreeSpace(){
     for(let i=0; i<inventario.length;i++){
         for(let j=0; j<inventario[i].length;j++) {
-            console.log(inventario[i][j]);
-            if (inventario[i][j]=="VACIO") return inventario[i][j];
+            if (inventario[i][j]=="VACIO") return [i,j];
         }
     }
-    return "lleno";
+    return null;
 }
 
-function searchFreeSpace(nameS){
+function searchFreeSpaceN(nameS){
     for(let i=0; i<inventario.length;i++){
         for(let j=0; j<inventario[i].length;j++) {
-            if (inventario[i][j].name==nameS && inventario[i][j].maxStack>inventario[i][j].quantity) return inventario[i][j];
+            if (inventario[i][j].name==nameS && inventario[i][j].maxStack>inventario[i][j].quantity) return [i,j];
         }
     }
-    return "lleno";
+    return null;
 }
 
 function objectAddition(objN, objD, objQ){
+    let position;
     let availableNames=["espada","pico","piedra","manzana","antorcha"]
     if (!availableNames.includes(objN)) return "error en la entrada del nombre, volver a intentar";
 
     if (objN=="espada" || objN=="pico"){
-        if(objQ!=1) return "error en la entrada, cantidad no es uno 1";
-        let position=searchFreeSpace();
-        if (position=="lleno") return "el inventario esta lleno";
-        position=new Item(objN, objD, objQ,1);
+            
+        if(objQ!=1){ return "error en la entrada, cantidad no es uno 1";}
+        position=searchFreeSpace();
+        if (position==null) return "el inventario esta lleno";
+        inventario[position[0]][position[1]]=new Item(objN, objD, objQ,1);
     }
     else{
         if (objQ<0 || objQ>64) "error en la entrada, cantidad no esta entre 1 y 64";
-        let position=searchFreeSpace(objN);
-        while(position!="lleno"){
-            if(position.quantity+objQ>64){
-                objQ-= position.quantity;
-                position.quantity =64;
+        position=searchFreeSpaceN(objN);
+        while(position!=null && objQ>0){
+            if(inventario[position[0]][position[1]].quantity+objQ>64){
+                objQ= inventario[position[0]][position[1]].quantity+objQ-64
+                inventario[position[0]][position[1]].quantity =64;
             }
-            else if (position.quantity+objQ<64){
-                position.quantity+=objQ;
+            else if (inventario[position[0]][position[1]].quantity+objQ<=64){
+                inventario[position[0]][position[1]].quantity+=objQ;
+                objQ=0;
                 return "cantidad de objeto añadido";
             }
-            position=searchFreeSpace(objN);
+            position=searchFreeSpaceN(objN);
         }
         position=searchFreeSpace();
-        if (position=="lleno") return "el inventario esta lleno, se han quedado "+objQ+" items fuera";
-        position=new Item(objN, objD, objQ,64);
+        if (position==null) return "el inventario esta lleno, se han quedado "+objQ+" items fuera";
+        inventario[position[0]][position[1]]=new Item(objN, objD, objQ,64);
     }
 
-    return "objeto añadido o no hay espacio";
+    return "objeto añadido en posicion: " + position;
 }
 
 inventario[0][0] = new Item("espada", "espada de diamante", 1,1);
+inventario[1][0] = new Item("piedra", "espada de diamante", 32,64);
+inventario[2][0] = new Item("piedra", "espada de diamante", 33,64);
+inventario[3][0] = new Item("piedra", "espada de diamante", 64,64);
+
 
 let fin =false;
 while (!fin){
