@@ -1,5 +1,10 @@
 let inventario = new Array(4).fill().map(x => new Array(9).fill("VACIO"))
 
+
+// const tryParseInt = (vale) =>{
+
+// }
+
 class Item {
     constructor(name, description, quantity, maxStack){
         this.name=name;
@@ -128,6 +133,22 @@ function objectAddition(objN, objD, objQ){
     return "objeto añadido en posicion: " + position;
 }
 
+
+function moveObejct(string1, string2){
+    pos1=string1.split(",");
+    pos2=string2.split(",");
+    matriz.forEach((pos) => {
+        pos=tryParseInt(pos);
+    })
+    if ((Number(pos1[0])>=0 && Number(pos1[1])<=3) && (Number(pos2[0])>=0 && Number(pos2[1])<=8)) return "posicion no valida";
+
+
+
+
+
+    return "xd";
+}
+
 inventario[0][0] = new Item("espada", "espada de diamante", 1,1);
 inventario[1][0] = new Item("piedra", "espada de diamante", 32,64);
 inventario[2][0] = new Item("piedra", "espada de diamante", 33,64);
@@ -141,6 +162,7 @@ while (!fin){
                         "\n 2. Mostrar Hotbar" +
                         "\n 3. Buscar Objeto" +
                         "\n 4. Añadir Objeto" +
+                        "\n 5. Mover Objeto" +
                         "\n 0. Salir");
     switch (operacion)  {
         case "1":
@@ -157,6 +179,11 @@ while (!fin){
             let desc = prompt("descripción del item");
             let quan = Number(prompt("cantidad del item"));
             console.log(objectAddition(name,desc,quan));
+            break
+        case "5":
+            let pos1 = prompt('Posicion de origen del item (escribir posicion separada por una coma ejemplo: "1,3")');
+            let pos2 = prompt('Posicion de origen del item (escribir posicion separada por una coma ejemplo: "1,3")');
+            console.log(moveObejct(pos1,pos2));
             break
         case "0":
             console.log("el Algoritmo a terminado");
