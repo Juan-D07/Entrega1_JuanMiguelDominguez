@@ -1,9 +1,9 @@
-let inventario = new Array(4).fill().map(x => new Array(9).fill("VACIO"))
 
 
-// const tryParseInt = (vale) =>{
-
-// }
+const tryParseInt = (value) =>{
+    let num =Number(value)
+    return Number.isInteger(num) ?  num : -1
+}
 
 class Item {
     constructor(name, description, quantity, maxStack){
@@ -22,6 +22,13 @@ class Item {
 
     showInfo(){
         console.log("Nombre: " + this.name + "\n Descripcion: " + this.description + "\n Quantity: "+ this.quantity +"\n maxStack: "+ this.maxStack);
+    }
+
+    compareTo(item){
+        if (this.constructor===item.constructor){
+            return this.title === item.title
+        }
+        return false;
     }
 }
 
@@ -148,6 +155,8 @@ function moveObejct(string1, string2){
 
     return "xd";
 }
+
+let inventario = new Array(4).fill().map(x => new Array(9).fill(new Item("piedra", "espada de diamante", 64,64)));
 
 inventario[0][0] = new Item("espada", "espada de diamante", 1,1);
 inventario[1][0] = new Item("piedra", "espada de diamante", 32,64);
