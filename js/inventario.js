@@ -22,6 +22,7 @@ class Item {
         return this._quantity
     }
 
+
     showInfo(){
         console.log("Nombre: " + this.name + "\n Descripcion: " + this.description + "\n Quantity: "+ this.quantity +"\n maxStack: "+ this.maxStack);
     }
@@ -33,6 +34,14 @@ class Item {
         return false;
     }
 }
+
+let validItems=[
+    new Item("espada", "espada de diamante", 1,1),
+    new Item("pico", "pico de hierro", 1,1),
+    new Item("piedra", "piedra de mina", 1,64),
+    new Item("antorcha", "antorcha de mina", 1,64),
+    new Item("manzana", "manzana de casa", 1,64)
+];
 
 //Mostrar inventory
 function showFullInventory(){
@@ -132,7 +141,7 @@ function searchFreeSpaceN(nameS){
 }
 
 //Anade un objeto al inventory
-function objectAddition(objN, objD, objQ){
+function objectAddition(objN, objQ){
     let position;
     // Validamos si en el nombre es valido
     let availableNames=["espada","pico","piedra","manzana","antorcha"]
@@ -228,9 +237,7 @@ function removeObejct(string1){
 
     //confirmacion de eliminacion
     let confirmation = prompt('Eliminar objeto '+inventory[pos1[0]][pos1[1]].name+' en '+pos1 +'? (si/no)');
-    while (confirmation.toLowerCase()!='si' && confirmation.toLowerCase()!='no'){
-        confirmation = prompt('Eliminar objeto '+inventory[pos1[0]][pos1[1]].name+' en ['+pos1 +']? (si / no)');
-    }
+    
     // elimnacion
     if (confirmation.toLowerCase()=='si'){
         inventory[pos1[0]][pos1[1]]=null;
@@ -269,7 +276,6 @@ function mostAbundantObject(){
             for(let key in totalObjects){
                 if (inventory[i][j]!=null && inventory[i][j].name==key) totalObjects[key]+=inventory[i][j].quantity;
             }
-            
         }
     }
     //comprueba que objeto tiene mas  cantidad
@@ -295,9 +301,8 @@ inventory[3][0] = new Item("piedra", "piedra de mina", 32,64);
 let fin =false;
 let pos1;
 let pos2;
-let namep;
-let descp;
-let quanp;
+let namePrompt;
+let quantityPrompt;
 while (!fin){
     let operation =prompt("Inventario de Minecraft"+
                         "\n 1. Mostrar Inventario" +
@@ -320,10 +325,9 @@ while (!fin){
             console.log(objectSearch(prompt("nombre del item (espada, pico, piedra, manzana, antorcha)")));
             break
         case "4":
-            namep = prompt("nombre del item (espada, pico, piedra, manzana, antorcha)").toLowerCase();
-            descp = prompt("descripción del item");
-            quanp = tryParseInt(prompt("cantidad del item"));
-            console.log(objectAddition(namep,descp,quanp));
+            namePrompt = prompt("nombre del item (espada, pico, piedra, manzana, antorcha)").toLowerCase();
+            quantityPrompt = tryParseInt(prompt("cantidad del item"));
+            console.log(objectAddition(namePrompt,quantityPrompt));
             break
         case "5":
             pos1 = prompt('Posicion de origen del item (escribir posicion separada por una coma ejemplo: "fila,columna")');
